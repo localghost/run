@@ -1,0 +1,20 @@
+language: go
+
+go:
+- 1.8
+
+before_deploy:
+- go build
+- export RUN_VERSION=$(git describe --tags --exact-match HEAD)
+- export RUN_PACKAGE=run-$RUN_VERSION,gz
+- cat run | gzip > $RUN_PACKAGE
+
+deploy:
+  provider: releases
+  api_key:
+    secure: dbXQiwsZp4e3hPmFSCXblf7BgbMzuguGoJzzGkDUonxZAKkvZw3T0G+Z1Jgkfg9Qvt48kDxa8w9Pyro4huMshRe/WOJgAh7qvVkA1cMK/xsM40Q2OhafHuLNYWfUNW/svsD6Ty2GKGOy+5aG4BiZ0G3ZLAXXhSDBuTH+dIREoNw165Kvao/XFFaWh4oHCmOIHw6CtIqRvM9cTIWmP41AAOWLDRskDI4nQckx9ZMfJ9HOXcfPdFoU6/C/U5FiSvQHcDasMde5u8DFZKbkIaxXZRny/ygpYOcGNAn48w4CCF2IBKUR1ayqDm6pfNoro4EsjE2ImKjzLx/k/xSVLLKGIkJ98adqaNvTZtDbFeAvoCqfkxG/ndkK3b8yMMiDjnkSEJKH7pTUSYGevwoJ9dT3j4AF/4YM1yUHkydXkZ/Nqyva4hA8XNMEbPM5vFeCiexTuTFWeIU3Wnt2KRhz8PD0ubcTcSkvgJ3ucJPaUQlYMQL263n6sEJP/fYPuOjSpSR70Y2L2TyQGu4O1rWP8+UOgEZ75B1RTIZ+xXvtf4bQ4McupECIbOfyBUU7YSMxF6YXWS8R5cagbWJFQFWt/lw3vlUklW2RYvPNMU2OVLjFhPfqQPPV8rjZJxguvw2WDY8Pw41tw9PPow5iCEVbos8j13dk0lX8VsYyZUuuARsqg7g=
+  file: $RUN_PACKAGE
+  skip_cleanup: true
+  on:
+    repo: localghost/run
+    tags: true
